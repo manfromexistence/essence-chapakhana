@@ -957,19 +957,50 @@
                             $allBrands = array_merge($brands, $brands, $brands);
                         @endphp
                         
-                        @foreach($allBrands as $index => $brand)
-                            <div class="brand-item flex-shrink-0 w-40 sm:w-48 md:w-44 lg:w-48" data-brand-index="{{ $index }}">
-                                <div class="flex items-center justify-center p-6 bg-card rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 h-24">
-                                <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}" class="h-16 max-w-full object-contain">
-                                <div class="text-xl font-bold text-muted-foreground">{{ $brand['name'] }}</div>
-                                <!-- @if(!empty($brand['logo']))
-                                        <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}" class="h-16 max-w-full object-contain">
-                                    @else
-                                        <div class="text-xl font-bold text-muted-foreground">{{ $brand['name'] }}</div>
-                                    @endif -->
-                                </div>
-                            </div>
-                        @endforeach
+ @foreach($allBrands as $index => $brand)
+<div class="brand-item"
+style="
+display: flex;
+flex-direction: column;
+padding: 10px;
+transition: transform 0.2s ease-in-out;
+"
+data-brand-index="{{ $index }}"
+onmouseover="this.style.transform='translateY(-4px)'"
+onmouseout="this.style.transform='translateY(0)'"
+>
+<div style="
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 24px;
+background-color: #ffffff;
+border-radius: 12px;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+border: 1px solid #f3f4f6;
+height: 160px;
+text-align: center;
+">
+<div style="height: 64px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+<img
+src="{{ $brand['logo'] }}"
+alt="{{ $brand['name'] }}"
+style="height: 100%; max-width: 100%; object-fit: contain;"
+onerror="this.style.display='none'"
+>
+</div>
+<div style="
+font-size: 1.125rem;
+font-weight: 600;
+color: #374151;
+font-family: sans-serif;
+">
+{{ $brand['name'] }}
+</div>
+</div>
+</div>
+@endforeach
                     </div>
                 </div>
 
