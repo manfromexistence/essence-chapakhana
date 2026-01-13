@@ -14,7 +14,6 @@ return new class extends Migration
         // Add indexes to products table
         Schema::table('products', function (Blueprint $table) {
             $table->index('category_id', 'idx_products_category_id');
-            $table->index('is_featured', 'idx_products_is_featured');
             $table->index('is_active', 'idx_products_is_active');
             $table->index(['is_active', 'stock'], 'idx_products_active_stock');
             // Removed fulltext index as it's not supported by all database drivers
@@ -56,7 +55,6 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropIndex('idx_products_category_id');
-            $table->dropIndex('idx_products_is_featured');
             $table->dropIndex('idx_products_is_active');
             $table->dropIndex('idx_products_active_stock');
         });
