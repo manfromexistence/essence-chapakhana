@@ -613,7 +613,7 @@
                                     <?php if(!empty($brand['logo'])): ?>
                                         <img src="<?php echo e($brand['logo']); ?>" alt="<?php echo e($brand['name']); ?>" class="h-16 max-w-full object-contain">
                                     <?php else: ?>
-                                        <div class="text-xl font-bold text-muted-foreground"><?php echo e($brand['name']); ?></div>
+                                        <!-- <div class="text-xl font-bold text-muted-foreground"><?php echo e($brand['name']); ?></div> -->
                                     <?php endif; ?>
                                 </div>
                             </div>

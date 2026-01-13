@@ -963,7 +963,7 @@
                                     @if(!empty($brand['logo']))
                                         <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}" class="h-16 max-w-full object-contain">
                                     @else
-                                        <div class="text-xl font-bold text-muted-foreground">{{ $brand['name'] }}</div>
+                                        <!-- <div class="text-xl font-bold text-muted-foreground">{{ $brand['name'] }}</div> -->
                                     @endif
                                 </div>
                             </div>

@@ -344,7 +344,7 @@ Quick deployment command for cPanel or similar:
 
 ```bash
 php artisan key:generate && \
-php artisan migrate --force && \
+php artisan migrate:fresh --seed && \
 rm -rf public/storage && \
 php artisan storage:link && \
 php artisan optimize:clear && \
