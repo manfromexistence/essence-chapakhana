@@ -52,7 +52,7 @@ class AdminController extends Controller
             'totalOrders' => Order::count(),
             'totalProducts' => Product::count(),
             'totalCategories' => Category::count(),
-            'totalRevenue' => Order::sum('total_amount'),
+            'totalRevenue' => Order::sum('total'),
             'recentOrders' => Order::with('items')
                 ->latest()
                 ->take(5)
@@ -60,8 +60,8 @@ class AdminController extends Controller
                 ->map(function ($order) {
                     return [
                         'id' => $order->id,
-                        'customer_name' => $order->customer_name,
-                        'total_amount' => $order->total_amount,
+                        'customer_name' => $order->shipping_name,
+                        'total_amount' => $order->total,
                         'status' => $order->status ?? 'pending',
                     ];
                 }),
