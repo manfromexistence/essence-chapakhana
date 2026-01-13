@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'home' => 'হোম',
+    'shop' => 'শপ',
+    'cart' => 'কার্ট',
+    'checkout' => 'চেকআউট',
+    'login' => 'লগইন',
+    'register' => 'নিবন্ধন',
+    'logout' => 'লগআউট',
+    'profile' => 'প্রোফাইল',
+    'orders' => 'অর্ডার',
+    'contact' => 'যোগাযোগ',
+    'about' => 'আমাদের সম্পর্কে',
+    'add_to_cart' => 'কার্টে যুক্ত করুন',
+    'buy_now' => 'এখনই কিনুন',
+    'quantity' => 'পরিমাণ',
+    'price' => 'মূল্য',
+    'total' => 'মোট',
+    'subtotal' => 'সাবটোটাল',
+    'shipping' => 'শিপিং',
+    'proceed_to_checkout' => 'চেকআউটে এগিয়ে যান',
+    'search' => 'খুঁজুন',
+    'filter' => 'ফিল্টার',
+    'sort_by' => 'সাজান',
+    'show' => 'দেখান',
+    'per_page' => 'প্রতি পাতায়',
+];

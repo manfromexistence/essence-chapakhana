@@ -1,0 +1,34 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - database
+        - routes
+    
+    # Set to level 5 as per requirements (can be increased to 8 gradually)
+    level: 5
+    
+    # Ignore errors in specific paths
+    excludePaths:
+        - app/Http/Middleware/HandleInertiaRequests.php
+        - bootstrap/cache/*
+        - storage/*
+        - vendor/*
+    
+    # Ignore specific errors that are common in Laravel
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+        - '#PHPDoc tag @var#'
+        - '#Using nullsafe property access.*on left side of \?\? is unnecessary#'
+        - '#PHPDoc type.*is not covariant with PHPDoc type.*of overridden property#'
+        - '#Relation.*is not found in.*model#'
+    
+    # Treat PHP deprecations as errors
+    reportUnmatchedIgnoredErrors: false
+    
+    # Parallel processing for faster analysis
+    parallel:
+        maximumNumberOfProcesses: 4

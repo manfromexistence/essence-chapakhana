@@ -1,0 +1,14 @@
+/* Slider animations */
+.slider-item {
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.slider-item.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

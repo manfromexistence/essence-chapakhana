@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'home' => 'Home',
+    'shop' => 'Shop',
+    'cart' => 'Cart',
+    'checkout' => 'Checkout',
+    'login' => 'Login',
+    'register' => 'Register',
+    'logout' => 'Logout',
+    'profile' => 'Profile',
+    'orders' => 'Orders',
+    'contact' => 'Contact',
+    'about' => 'About Us',
+    'add_to_cart' => 'Add to Cart',
+    'buy_now' => 'Buy Now',
+    'quantity' => 'Quantity',
+    'price' => 'Price',
+    'total' => 'Total',
+    'subtotal' => 'Subtotal',
+    'shipping' => 'Shipping',
+    'proceed_to_checkout' => 'Proceed to Checkout',
+    'search' => 'Search',
+    'filter' => 'Filter',
+    'sort_by' => 'Sort By',
+    'show' => 'Show',
+    'per_page' => 'Per Page',
+];
