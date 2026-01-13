@@ -114,7 +114,6 @@ export const AdminImageInput = ({
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             
             const headers = {
-                'Content-Type': 'multipart/form-data',
                 'Accept': 'application/json',
             };
             
@@ -137,9 +136,17 @@ export const AdminImageInput = ({
             }
         } catch (err) {
             console.error('Upload error:', err);
-            const message = err.response?.data?.message 
-                || err.response?.data?.errors?.image?.[0]
-                || 'Upload failed. Please try again.';
+            console.error('Response data:', err.response?.data);
+            
+            // Extract validation error message
+            let message = 'Upload failed. Please try again.';
+            if (err.response?.data?.errors) {
+                const errors = err.response.data.errors;
+                message = Object.values(errors).flat().join(', ');
+            } else if (err.response?.data?.message) {
+                message = err.response.data.message;
+            }
+            
             setValidationError(message);
         } finally {
             setIsUploading(false);

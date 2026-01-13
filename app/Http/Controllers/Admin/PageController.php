@@ -16,13 +16,16 @@ class PageController extends Controller
     public function uploadImage(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360', // 15MB
+            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:15360', // 15MB
             'folder' => 'nullable|string|max:50',
         ]);
 
-        $folder = $request->input('folder', 'uploads');
+        $folder = $request->input('folder', 'images');
         // Sanitize folder name
         $folder = preg_replace('/[^a-zA-Z0-9\-_]/', '', $folder);
+        if (empty($folder)) {
+            $folder = 'images';
+        }
         
         $uploadsPath = public_path('uploads/' . $folder);
         if (!file_exists($uploadsPath)) {
@@ -30,7 +33,11 @@ class PageController extends Controller
         }
 
         $imageFile = $request->file('image');
-        $filename = time() . '_' . uniqid() . '_' . $imageFile->getClientOriginalName();
+        
+        // Sanitize filename
+        $originalName = preg_replace('/[^a-zA-Z0-9\.\-_]/', '_', $imageFile->getClientOriginalName());
+        $filename = time() . '_' . uniqid() . '_' . $originalName;
+        
         $imageFile->move($uploadsPath, $filename);
 
         $url = '/uploads/' . $folder . '/' . $filename;
