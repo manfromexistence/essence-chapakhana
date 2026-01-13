@@ -960,11 +960,13 @@
                         @foreach($allBrands as $index => $brand)
                             <div class="brand-item flex-shrink-0 w-40 sm:w-48 md:w-44 lg:w-48" data-brand-index="{{ $index }}">
                                 <div class="flex items-center justify-center p-6 bg-card rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 h-24">
-                                    @if(!empty($brand['logo']))
+                                <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}" class="h-16 max-w-full object-contain">
+                                <div class="text-xl font-bold text-muted-foreground">{{ $brand['name'] }}</div>
+                                <!-- @if(!empty($brand['logo']))
                                         <img src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}" class="h-16 max-w-full object-contain">
                                     @else
-                                        <!-- <div class="text-xl font-bold text-muted-foreground">{{ $brand['name'] }}</div> -->
-                                    @endif
+                                        <div class="text-xl font-bold text-muted-foreground">{{ $brand['name'] }}</div>
+                                    @endif -->
                                 </div>
                             </div>
                         @endforeach
