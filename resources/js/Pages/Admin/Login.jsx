@@ -40,7 +40,7 @@ export default function Login() {
                                     type="email"
                                     value={data.email}
                                     onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="admin@chapakhana.com"
+                                    // placeholder="admin@chapakhana.com"
                                     required
                                     autoFocus
                                     error={errors.email}

@@ -143,7 +143,6 @@
                                 required
                                 value="<?php echo e(old('email')); ?>"
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                                placeholder="admin@chapakhana.com"
                             >
                         </div>
                     </div>
