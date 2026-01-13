@@ -5,7 +5,7 @@ Chapakhana is a product of Nex Group and Developed by Alphainno.
 ## Zip with windows 7-Zip
 
 ```bash
-npm run build && "/c/Program Files/7-Zip/7z.exe" a -tzip ../chapakhana.zip . '-xr!node_modules' '-xr!.git' -mx=1
+npm run build && "/c/Program Files/7-Zip/7z.exe" a -tzip ../chapakhana-updated.zip . '-xr!node_modules' '-xr!.git' -mx=1
 ```
 
 ### Cpanle Deploy
