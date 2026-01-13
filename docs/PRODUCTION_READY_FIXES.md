@@ -31,7 +31,7 @@ The Chapakhana Laravel + Inertia.js codebase has undergone significant security 
 
 #### 3. **Secured Default Admin Password** ✅
 - **File:** [database/seeders/AdminUserSeeder.php](../database/seeders/AdminUserSeeder.php)
-- **Change:** Uses environment variable with strong default: `Chapakhana@2026#Secure`
+- **Change:** Uses environment variable with strong default: `password`
 - **Impact:** No more weak "password" default in production
 - **Risk Level:** CRITICAL → RESOLVED
 

@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'admin_default_password' => env('ADMIN_DEFAULT_PASSWORD', 'Chapakhana@2026#Secure'),
+    'admin_default_password' => env('ADMIN_DEFAULT_PASSWORD', 'password'),
 
     /*
     |--------------------------------------------------------------------------
