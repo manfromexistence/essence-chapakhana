@@ -16,19 +16,13 @@ class PageController extends Controller
 
     /**
      * Display the home page.
+     *
+     * Note: homeContent is provided by the view composer in AppServiceProvider
+     * which properly handles defaults and is_active filtering.
      */
     public function home()
     {
-        // Fetch all home page sections from database
-        $sections = PageSection::where('page', 'home')->get()->keyBy('section_key');
-
-        // Extract content from sections
-        $homeContent = [];
-        foreach ($sections as $key => $section) {
-            $homeContent[$key] = $section->content;
-        }
-
-        return view('pages.home', compact('homeContent', 'sections'));
+        return view('pages.home');
     }
 
     /**
