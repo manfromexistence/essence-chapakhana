@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { useForm, Link } from '@inertiajs/react';
+import { useForm, Link, usePage } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AdminTextInput } from '@/components/AdminTextInput';
@@ -15,44 +15,54 @@ import { ArrowLeft, Save, Plus, Trash2, Image } from 'lucide-react';
 
 import { useTabsWithLocalStorage } from '@/hooks/useTabsWithLocalStorage';
 
+// Helper to build initial data from sections
+const buildInitialData = (sections) => ({
+    sections: {
+        hero_slider: {
+            content: sections?.hero_slider?.content || { slides: [], stats: {} },
+            title: sections?.hero_slider?.title || 'Hero Slider'
+        },
+        headline: {
+            content: sections?.headline?.content || { title: '', description: '' },
+            title: sections?.headline?.title || 'Headline'
+        },
+        how_to_order: {
+            content: sections?.how_to_order?.content || { title: '', steps: [], video_url: '' },
+            title: sections?.how_to_order?.title || 'How To Order'
+        },
+        best_sellers: {
+            content: sections?.best_sellers?.content || { title: '', products: [] },
+            title: sections?.best_sellers?.title || 'Best Sellers'
+        },
+        testimonials: {
+            content: sections?.testimonials?.content || { title: '', subtitle: '', items: [] },
+            title: sections?.testimonials?.title || 'Testimonials'
+        },
+        offer_banner: {
+            content: sections?.offer_banner?.content || { title: '', subtitle: '', description: '', cta_text: '', cta_url: '' },
+            title: sections?.offer_banner?.title || 'Offer Banner'
+        },
+        trust_section: {
+            content: sections?.trust_section?.content || { title: '', subtitle: '', brands: [] },
+            title: sections?.trust_section?.title || 'Trust Section'
+        },
+    }
+});
+
 export default function HomePageEditor({ sections }) {
     const [activeTab, setActiveTab] = useTabsWithLocalStorage('admin-home-tab', 'hero');
+    const { flash } = usePage().props;
 
-    // Convert sections to form data
-    const initialData = {
-        sections: {
-            hero_slider: {
-                content: sections?.hero_slider?.content || { slides: [], stats: {} },
-                title: sections?.hero_slider?.title || 'Hero Slider'
-            },
-            headline: {
-                content: sections?.headline?.content || { title: '', description: '' },
-                title: sections?.headline?.title || 'Headline'
-            },
-            how_to_order: {
-                content: sections?.how_to_order?.content || { title: '', steps: [], video_url: '' },
-                title: sections?.how_to_order?.title || 'How To Order'
-            },
-            best_sellers: {
-                content: sections?.best_sellers?.content || { title: '', products: [] },
-                title: sections?.best_sellers?.title || 'Best Sellers'
-            },
-            testimonials: {
-                content: sections?.testimonials?.content || { title: '', subtitle: '', items: [] },
-                title: sections?.testimonials?.title || 'Testimonials'
-            },
-            offer_banner: {
-                content: sections?.offer_banner?.content || { title: '', subtitle: '', description: '', cta_text: '', cta_url: '' },
-                title: sections?.offer_banner?.title || 'Offer Banner'
-            },
-            trust_section: {
-                content: sections?.trust_section?.content || { title: '', subtitle: '', brands: [] },
-                title: sections?.trust_section?.title || 'Trust Section'
-            },
+    const { data, setData, post, processing, errors, reset } = useForm(buildInitialData(sections));
+
+    // Reset form data when sections prop changes (after successful save)
+    useEffect(() => {
+        if (flash?.success) {
+            // Use the updated sections from flash or props
+            const updatedSections = flash?.sections || sections;
+            reset(buildInitialData(updatedSections));
         }
-    };
-
-    const { data, setData, post, processing, errors } = useForm(initialData);
+    }, [sections, flash?.success]);
 
     const updateSection = (sectionKey, content) => {
         setData('sections', {
@@ -66,7 +76,8 @@ export default function HomePageEditor({ sections }) {
         // Use post with _method for file uploads (Inertia limitation with PUT)
         post('/admin/pages/home', {
             forceFormData: true,
-            _method: 'PUT'
+            _method: 'PUT',
+            preserveScroll: true,
         });
     };
 
@@ -290,6 +301,7 @@ export default function HomePageEditor({ sections }) {
                                                                 value={slide.image}
                                                                 onChange={(value) => updateSlide(index, 'image', value)}
                                                                 defaultImage={slide.image}
+                                                                uploadFolder="hero-slider"
                                                                 aspectRatio="21/9"
                                                                 helperText="Upload hero slide image"
                                                             />
@@ -513,6 +525,7 @@ export default function HomePageEditor({ sections }) {
                                                         value={product.image}
                                                         onChange={(value) => updateProduct(index, 'image', value)}
                                                         defaultImage={product.image}
+                                                        uploadFolder="best-sellers"
                                                         aspectRatio="1/1"
                                                         maxSizeMB={15}
                                                     />
@@ -604,8 +617,8 @@ export default function HomePageEditor({ sections }) {
                                                                 label="Avatar Image"
                                                                 id={`testimonial-avatar-${index}`}
                                                                 value={item.avatar_image}
-                                                                onChange={(file) => updateTestimonial(index, 'avatar_image', file)}
-                                                                accept="image/*"
+                                                                onChange={(value) => updateTestimonial(index, 'avatar_image', value)}
+                                                                uploadFolder="testimonials"
                                                                 helperText="Upload avatar image (recommended: 100x100px)"
                                                                 aspectRatio="1/1"
                                                             />
@@ -731,11 +744,11 @@ export default function HomePageEditor({ sections }) {
                                                 label="Background Image"
                                                 id="offer_bg_image"
                                                 value={data.sections.offer_banner.content.background_image}
-                                                onChange={(file) => updateSection('offer_banner', {
+                                                onChange={(value) => updateSection('offer_banner', {
                                                     ...data.sections.offer_banner.content,
-                                                    background_image: file
+                                                    background_image: value
                                                 })}
-                                                accept="image/*"
+                                                uploadFolder="banners"
                                                 helperText="Upload banner background image (recommended: 1920x400px). If set, this will override the background gradient."
                                                 aspectRatio="16/4"
                                             />
@@ -832,6 +845,7 @@ export default function HomePageEditor({ sections }) {
                                                                 value={brand.logo}
                                                                 onChange={(value) => updateBrand(index, 'logo', value)}
                                                                 defaultImage={brand.logo}
+                                                                uploadFolder="brands"
                                                                 aspectRatio="16/9"
                                                                 maxSizeMB={15}
                                                                 className="[&>label]:text-xs"

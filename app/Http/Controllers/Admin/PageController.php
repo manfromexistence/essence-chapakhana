@@ -10,6 +10,38 @@ use Inertia\Inertia;
 class PageController extends Controller
 {
     /**
+     * Upload an image and return the URL.
+     * Used by AdminImageInput component for immediate file uploads.
+     */
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:15360', // 15MB
+            'folder' => 'nullable|string|max:50',
+        ]);
+
+        $folder = $request->input('folder', 'uploads');
+        // Sanitize folder name
+        $folder = preg_replace('/[^a-zA-Z0-9\-_]/', '', $folder);
+        
+        $uploadsPath = public_path('uploads/' . $folder);
+        if (!file_exists($uploadsPath)) {
+            mkdir($uploadsPath, 0755, true);
+        }
+
+        $imageFile = $request->file('image');
+        $filename = time() . '_' . uniqid() . '_' . $imageFile->getClientOriginalName();
+        $imageFile->move($uploadsPath, $filename);
+
+        $url = '/uploads/' . $folder . '/' . $filename;
+
+        return response()->json([
+            'success' => true,
+            'url' => $url,
+        ]);
+    }
+
+    /**
      * Display page management dashboard.
      */
     public function index()
@@ -220,7 +252,13 @@ class PageController extends Controller
             PageSection::setSection('home', $sectionKey, $content, $sectionData['title'] ?? null);
         }
 
-        return back()->with('success', 'Home page updated successfully!');
+        // Fetch updated sections to return with proper URLs
+        $updatedSections = PageSection::where('page', 'home')->get()->keyBy('section_key');
+
+        return back()->with([
+            'success' => 'Home page updated successfully!',
+            'sections' => $updatedSections,
+        ]);
     }
 
     /**
@@ -279,7 +317,10 @@ class PageController extends Controller
 
         $section = PageSection::setSection('header', 'main', $content, 'Header');
 
-        return back()->with('success', 'Header updated successfully!');
+        return back()->with([
+            'success' => 'Header updated successfully!',
+            'section' => $section,
+        ]);
     }
 
     /**
@@ -332,9 +373,12 @@ class PageController extends Controller
             // If logo is already a URL string, keep it as is
         }
 
-        PageSection::setSection('footer', 'main', $content, 'Footer');
+        $section = PageSection::setSection('footer', 'main', $content, 'Footer');
 
-        return back()->with('success', 'Footer updated successfully!');
+        return back()->with([
+            'success' => 'Footer updated successfully!',
+            'section' => $section,
+        ]);
     }
 
     /**

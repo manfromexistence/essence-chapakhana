@@ -132,39 +132,16 @@ export default function HeaderEditor({ section }) {
                                         id="logo"
                                         value={data.content.logo || ''}
                                         onChange={(value) => {
-                                            if (value instanceof File) {
-                                                // Store the file for upload
-                                                setData(prev => ({
-                                                    ...prev,
-                                                    logo: value,
-                                                    content: {
-                                                        ...prev.content,
-                                                        logo: URL.createObjectURL(value)
-                                                    }
-                                                }));
-                                            } else if (typeof value === 'string') {
-                                                // URL input
-                                                setData(prev => ({
-                                                    ...prev,
-                                                    logo: null,
-                                                    content: {
-                                                        ...prev.content,
-                                                        logo: value
-                                                    }
-                                                }));
-                                            } else {
-                                                // Remove image
-                                                setData(prev => ({
-                                                    ...prev,
-                                                    logo: null,
-                                                    content: {
-                                                        ...prev.content,
-                                                        logo: ''
-                                                    }
-                                                }));
-                                            }
+                                            setData(prev => ({
+                                                ...prev,
+                                                content: {
+                                                    ...prev.content,
+                                                    logo: value || ''
+                                                }
+                                            }));
                                         }}
                                         defaultImage={data.content.logo}
+                                        uploadFolder="logos"
                                         aspectRatio="3/1"
                                         maxSizeMB={15}
                                         helperText="Recommended: 300x100px, PNG or SVG format"

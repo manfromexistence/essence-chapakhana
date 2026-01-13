@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { useForm, Link } from '@inertiajs/react';
+import { useForm, Link, usePage } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AdminTextInput } from '@/components/AdminTextInput';
@@ -9,23 +9,36 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
 
-export default function FooterEditor({ section }) {
-    const initialContent = section?.content || {
-        logo: '/logo.png',
-        company_info: { name: '', description: '' },
-        contact: { address: '', phone: '', email: '' },
-        social_links: [],
-        quick_links: [],
-        copyright: '',
-    };
+const buildInitialContent = (section) => section?.content || {
+    logo: '/logo.png',
+    company_info: { name: '', description: '' },
+    contact: { address: '', phone: '', email: '' },
+    social_links: [],
+    quick_links: [],
+    copyright: '',
+};
 
-    const { data, setData, put, processing } = useForm({
-        content: initialContent,
+export default function FooterEditor({ section }) {
+    const { flash } = usePage().props;
+
+    const { data, setData, post, processing, reset } = useForm({
+        content: buildInitialContent(section),
     });
+
+    // Reset form data when section prop changes (after successful save)
+    useEffect(() => {
+        if (flash?.success && flash?.section) {
+            reset({ content: buildInitialContent(flash.section) });
+        }
+    }, [flash?.success]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put('/admin/pages/footer');
+        post('/admin/pages/footer', {
+            forceFormData: true,
+            _method: 'PUT',
+            preserveScroll: true,
+        });
     };
 
     // Social Links handlers
@@ -107,8 +120,9 @@ export default function FooterEditor({ section }) {
                                     label="Logo Image"
                                     id="footer_logo"
                                     value={data.content.logo || ''}
-                                    onChange={(file) => setData('content', { ...data.content, logo: file })}
-                                    defaultImage={initialContent.logo}
+                                    onChange={(value) => setData('content', { ...data.content, logo: value || '' })}
+                                    defaultImage={data.content.logo}
+                                    uploadFolder="footer"
                                     aspectRatio="auto"
                                     maxSizeMB={2}
                                     helperText="Recommended: PNG with transparent background, max 2MB"

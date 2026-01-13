@@ -3,19 +3,24 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Upload, X, Image as ImageIcon, LinkIcon } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, LinkIcon, Loader2 } from 'lucide-react';
+import axios from 'axios';
 
 /**
  * AdminImageInput Component
  * 
  * A reusable image input component for admin forms with support for file upload, URL input,
- * preview, and default/seeded images
+ * preview, and default/seeded images.
+ * 
+ * When a file is uploaded, it is immediately sent to the server and the returned URL is used.
+ * This ensures the form always contains URL strings, not File objects.
  * 
  * @param {string} label - The label for the input field
  * @param {string} id - The ID for the input field
- * @param {string|File} value - The current value (URL or File object)
- * @param {function} onChange - Callback function when value changes
+ * @param {string} value - The current value (URL string)
+ * @param {function} onChange - Callback function when value changes (receives URL string)
  * @param {string} defaultImage - Default/seeded image URL to show initially
+ * @param {string} uploadFolder - Folder name for uploads (default: 'images')
  * @param {boolean} required - Whether the field is required
  * @param {string} error - Error message to display
  * @param {string} helperText - Helper text to display below input
@@ -31,6 +36,7 @@ export const AdminImageInput = ({
     value,
     onChange,
     defaultImage = '',
+    uploadFolder = 'images',
     required = false,
     error,
     helperText,
@@ -43,29 +49,34 @@ export const AdminImageInput = ({
     currentImage, // Destructure to prevent passing to DOM
     ...props
 }) => {
-    const [previewUrl, setPreviewUrl] = useState(defaultImage);
-    const [imageSource, setImageSource] = useState(defaultImage ? 'default' : null); // 'default', 'file', 'url'
-    const [urlInput, setUrlInput] = useState('');
+    // Ensure we only work with string values
+    const getStringValue = (val) => (typeof val === 'string' ? val : '');
+    
+    const [previewUrl, setPreviewUrl] = useState(getStringValue(value) || getStringValue(defaultImage));
+    const [imageSource, setImageSource] = useState(getStringValue(value) ? 'url' : (getStringValue(defaultImage) ? 'default' : null));
+    const [urlInput, setUrlInput] = useState(getStringValue(value) || getStringValue(defaultImage) || '');
     const [validationError, setValidationError] = useState('');
     const [isDragging, setIsDragging] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef(null);
 
     useEffect(() => {
-        // Update preview when value changes
-        if (value instanceof File) {
-            const objectUrl = URL.createObjectURL(value);
-            setPreviewUrl(objectUrl);
-            setImageSource('file');
-            setUrlInput('');
-            return () => URL.revokeObjectURL(objectUrl);
-        } else if (typeof value === 'string' && value) {
-            setPreviewUrl(value);
+        // Update preview when value changes externally
+        const strValue = getStringValue(value);
+        const strDefault = getStringValue(defaultImage);
+        
+        if (strValue) {
+            setPreviewUrl(strValue);
             setImageSource('url');
-            setUrlInput(value);
-        } else if (defaultImage && !value) {
-            setPreviewUrl(defaultImage);
+            setUrlInput(strValue);
+        } else if (strDefault) {
+            setPreviewUrl(strDefault);
             setImageSource('default');
-            setUrlInput(defaultImage);
+            setUrlInput(strDefault);
+        } else {
+            setPreviewUrl('');
+            setImageSource(null);
+            setUrlInput('');
         }
     }, [value, defaultImage]);
 
@@ -90,7 +101,52 @@ export const AdminImageInput = ({
         return '';
     };
 
-    const handleFileChange = (e) => {
+    const uploadFile = async (file) => {
+        setIsUploading(true);
+        setValidationError('');
+
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('folder', uploadFolder);
+
+            // Get CSRF token - try multiple sources
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            const headers = {
+                'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
+            };
+            
+            if (csrfToken) {
+                headers['X-CSRF-TOKEN'] = csrfToken;
+            }
+
+            const response = await axios.post('/admin/upload-image', formData, { headers });
+
+            if (response.data.success && response.data.url) {
+                const url = response.data.url;
+                setPreviewUrl(url);
+                setImageSource('url');
+                setUrlInput(url);
+                if (onChange) {
+                    onChange(url);
+                }
+            } else {
+                setValidationError('Upload failed. Please try again.');
+            }
+        } catch (err) {
+            console.error('Upload error:', err);
+            const message = err.response?.data?.message 
+                || err.response?.data?.errors?.image?.[0]
+                || 'Upload failed. Please try again.';
+            setValidationError(message);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleFileChange = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -100,10 +156,16 @@ export const AdminImageInput = ({
             return;
         }
 
-        setValidationError('');
-        if (onChange) {
-            onChange(file);
-        }
+        // Show local preview immediately
+        const localPreview = URL.createObjectURL(file);
+        setPreviewUrl(localPreview);
+        setImageSource('file');
+
+        // Upload the file
+        await uploadFile(file);
+
+        // Clean up local preview
+        URL.revokeObjectURL(localPreview);
     };
 
     const handleUrlChange = (e) => {
@@ -111,17 +173,20 @@ export const AdminImageInput = ({
     };
 
     const handleUrlSubmit = () => {
-        if (!urlInput.trim()) {
+        const url = typeof urlInput === 'string' ? urlInput.trim() : '';
+        if (!url) {
             setValidationError('Please enter a URL');
             return;
         }
 
         // Basic URL validation
         try {
-            new URL(urlInput);
+            new URL(url);
             setValidationError('');
+            setPreviewUrl(url);
+            setImageSource('url');
             if (onChange) {
-                onChange(urlInput);
+                onChange(url);
             }
         } catch {
             setValidationError('Please enter a valid URL');
@@ -138,7 +203,7 @@ export const AdminImageInput = ({
         setIsDragging(false);
     };
 
-    const handleDrop = (e) => {
+    const handleDrop = async (e) => {
         e.preventDefault();
         setIsDragging(false);
 
@@ -151,10 +216,16 @@ export const AdminImageInput = ({
             return;
         }
 
-        setValidationError('');
-        if (onChange) {
-            onChange(file);
-        }
+        // Show local preview immediately
+        const localPreview = URL.createObjectURL(file);
+        setPreviewUrl(localPreview);
+        setImageSource('file');
+
+        // Upload the file
+        await uploadFile(file);
+
+        // Clean up local preview
+        URL.revokeObjectURL(localPreview);
     };
 
     const handleRemove = () => {
@@ -166,12 +237,14 @@ export const AdminImageInput = ({
             fileInputRef.current.value = '';
         }
         if (onChange) {
-            onChange(null);
+            onChange(defaultImage || '');
         }
     };
 
     const handleBrowseClick = () => {
-        fileInputRef.current?.click();
+        if (!isUploading) {
+            fileInputRef.current?.click();
+        }
     };
 
     const displayError = error || validationError;
@@ -199,8 +272,7 @@ export const AdminImageInput = ({
                 accept={acceptedFormats.map((f) => `.${f}`).join(',')}
                 onChange={handleFileChange}
                 className="hidden"
-                required={required && !defaultImage && !hasImage}
-                disabled={disabled}
+                disabled={disabled || isUploading}
                 {...props}
             />
 
@@ -210,7 +282,8 @@ export const AdminImageInput = ({
                     <div
                         className={cn(
                             'relative overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 cursor-pointer transition-all',
-                            isDragging && 'border-primary bg-primary/5'
+                            isDragging && 'border-primary bg-primary/5',
+                            isUploading && 'opacity-70 cursor-wait'
                         )}
                         style={{ aspectRatio }}
                         onDragOver={handleDragOver}
@@ -227,46 +300,49 @@ export const AdminImageInput = ({
                             }}
                         />
                         
+                        {/* Upload progress overlay */}
+                        {isUploading && (
+                            <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-2">
+                                <Loader2 className="h-8 w-8 text-white animate-spin" />
+                                <span className="text-white text-sm font-medium">Uploading...</span>
+                            </div>
+                        )}
+                        
                         {/* Hover overlay with replace button */}
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                            <Upload className="h-8 w-8 text-white" />
-                            <span className="text-white text-sm font-medium">Click to replace</span>
-                            <span className="text-white/70 text-xs">or drag & drop</span>
-                        </div>
+                        {!isUploading && (
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                                <Upload className="h-8 w-8 text-white" />
+                                <span className="text-white text-sm font-medium">Click to replace</span>
+                                <span className="text-white/70 text-xs">or drag & drop</span>
+                            </div>
+                        )}
 
                         {/* Default badge */}
-                        {imageSource === 'default' && (
+                        {imageSource === 'default' && !isUploading && (
                             <div className="absolute top-2 left-2 z-10">
                                 <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-blue-100 text-blue-800">
                                     Default
                                 </span>
                             </div>
                         )}
-
-                        {/* File badge when uploaded */}
-                        {imageSource === 'file' && (
-                            <div className="absolute top-2 left-2 z-10">
-                                <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-green-100 text-green-800">
-                                    Uploaded
-                                </span>
-                            </div>
-                        )}
                     </div>
 
                     {/* Remove button */}
-                    <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemove();
-                        }}
-                        disabled={disabled}
-                    >
-                        <X className="h-4 w-4" />
-                    </Button>
+                    {!isUploading && (
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemove();
+                            }}
+                            disabled={disabled}
+                        >
+                            <X className="h-4 w-4" />
+                        </Button>
+                    )}
                 </div>
             )}
 
@@ -278,20 +354,31 @@ export const AdminImageInput = ({
                         isDragging
                             ? 'border-primary bg-primary/5'
                             : 'border-gray-300 hover:border-gray-400',
-                        disabled && 'opacity-50 cursor-not-allowed'
+                        (disabled || isUploading) && 'opacity-50 cursor-not-allowed'
                     )}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                     onClick={handleBrowseClick}
                 >
-                    <ImageIcon className="h-10 w-10 text-gray-400 mb-3" />
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                        Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500">
-                        {acceptedFormats.map((f) => f.toUpperCase()).join(', ')} up to {maxSizeMB}MB
-                    </p>
+                    {isUploading ? (
+                        <>
+                            <Loader2 className="h-10 w-10 text-gray-400 mb-3 animate-spin" />
+                            <p className="text-sm font-medium text-gray-700 mb-1">
+                                Uploading...
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <ImageIcon className="h-10 w-10 text-gray-400 mb-3" />
+                            <p className="text-sm font-medium text-gray-700 mb-1">
+                                Click to upload or drag and drop
+                            </p>
+                            <p className="text-xs text-gray-500">
+                                {acceptedFormats.map((f) => f.toUpperCase()).join(', ')} up to {maxSizeMB}MB
+                            </p>
+                        </>
+                    )}
                 </div>
             )}
 
@@ -304,7 +391,7 @@ export const AdminImageInput = ({
                         placeholder="Or enter image URL..."
                         value={urlInput}
                         onChange={handleUrlChange}
-                        disabled={disabled}
+                        disabled={disabled || isUploading}
                         className="pl-9"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
@@ -318,7 +405,7 @@ export const AdminImageInput = ({
                     type="button"
                     variant="secondary"
                     onClick={handleUrlSubmit}
-                    disabled={disabled || !urlInput.trim()}
+                    disabled={disabled || isUploading || !urlInput || (typeof urlInput === 'string' && !urlInput.trim())}
                 >
                     Load
                 </Button>

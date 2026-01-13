@@ -43,6 +43,9 @@ Route::middleware('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
 
+    // Image Upload API (for AdminImageInput component)
+    Route::post('/upload-image', [AdminPageController::class, 'uploadImage'])->name('upload-image');
+
     // Category Management
     Route::resource('categories', CategoryController::class);
 
