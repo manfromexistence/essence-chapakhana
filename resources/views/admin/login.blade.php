@@ -200,7 +200,6 @@
                                 required
                                 value="{{ old('email') }}"
                                 class="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
-                                placeholder="admin@chapakhana.com"
                             >
                         </div>
                     </div>
@@ -223,7 +222,6 @@
                                 autocomplete="current-password"
                                 required
                                 class="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
-                                placeholder="Enter your password"
                             >
                         </div>
                     </div>

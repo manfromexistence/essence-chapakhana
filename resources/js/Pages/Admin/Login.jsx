@@ -96,7 +96,6 @@ export default function Login() {
                                     type="email"
                                     value={data.email}
                                     onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="admin@chapakhana.com"
                                     required
                                     autoFocus
                                     error={errors.email}
@@ -115,7 +114,6 @@ export default function Login() {
                                     type="password"
                                     value={data.password}
                                     onChange={(e) => setData('password', e.target.value)}
-                                    placeholder="Enter your password"
                                     required
                                     error={errors.password}
                                     showCharCount={false}
