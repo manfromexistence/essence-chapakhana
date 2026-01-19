@@ -1,8 +1,6 @@
-@extends('layouts.guest')
+<?php $__env->startSection('title', 'Login Chapakhana'); ?>
 
-@section('title', 'Login Chapakhana')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <!-- Header -->
@@ -15,18 +13,18 @@
 
             <!-- Login Form -->
             <div class="bg-white rounded-2xl shadow-lg p-8">
-                @if ($errors->any())
+                <?php if($errors->any()): ?>
                     <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
                         <ul class="list-disc list-inside text-sm">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <form class="space-y-6" action="/login" method="POST">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     
                     <!-- Email -->
                     <div>
@@ -45,7 +43,7 @@
                                 type="email" 
                                 autocomplete="email" 
                                 required 
-                                value="{{ old('email') }}"
+                                value="<?php echo e(old('email')); ?>"
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 placeholder="you@example.com"
                             >
@@ -150,4 +148,6 @@
             </p>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.guest', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH F:\Code\chapakhana\resources\views/auth/login.blade.php ENDPATH**/ ?>
