@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AdminSectionCards } from '@/components/admin-section-cards';
+import { RevenueChart } from '@/components/revenue-chart';
 import {
     Package,
     ShoppingCart,
@@ -11,7 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function Dashboard({ stats }) {
+export default function Dashboard({ stats, chartData }) {
     return (
 
         <div className="@container/main flex flex-1 flex-col gap-2">
@@ -26,6 +27,11 @@ export default function Dashboard({ stats }) {
 
                 {/* Stats Cards */}
                 <AdminSectionCards stats={stats} />
+
+                {/* Charts Section */}
+                <div className="px-4 lg:px-6">
+                    <RevenueChart data={chartData} />
+                </div>
 
                 {/* Recent Orders & Quick Actions */}
                 <div className="grid gap-4 px-4 md:grid-cols-2 lg:px-6">
@@ -59,7 +65,7 @@ export default function Dashboard({ stats }) {
                                             </div>
                                             <div className="text-right">
                                                 <p className="font-medium">
-                                                    Rs. {order.total_amount?.toLocaleString()}
+                                                    ৳ {order.total_amount?.toLocaleString()}
                                                 </p>
                                                 <Badge
                                                     variant={

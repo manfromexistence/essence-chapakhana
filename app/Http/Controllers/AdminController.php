@@ -48,6 +48,11 @@ class AdminController extends Controller
 
     public function dashboard()
     {
+        // Get current month data
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        
+        // Calculate stats
         $stats = [
             'totalOrders' => Order::count(),
             'totalProducts' => Product::count(),
@@ -67,8 +72,40 @@ class AdminController extends Controller
                 }),
         ];
 
+        // Generate chart data for the last 30 days
+        $chartData = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $dateStr = $date->format('Y-m-d');
+            
+            // Get orders for this day
+            $dayOrders = Order::whereDate('created_at', $date)->get();
+            $revenue = $dayOrders->sum('total');
+            $orderCount = $dayOrders->count();
+            
+            $chartData[] = [
+                'date' => $dateStr,
+                'revenue' => (float) $revenue,
+                'orders' => $orderCount,
+            ];
+        }
+
+        // Get top selling categories
+        $topCategories = Category::withCount('products')
+            ->orderBy('products_count', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'name' => $category->name,
+                    'count' => $category->products_count,
+                ];
+            });
+
         return Inertia::render('Admin/Dashboard', [
             'stats' => $stats,
+            'chartData' => $chartData,
+            'topCategories' => $topCategories,
         ]);
     }
 

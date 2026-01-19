@@ -29,3 +29,5 @@ Chapakhana task
 3. Design request not included 
 4. Admin dashboard easy korte hobe . R admin panel r my order eksathe asbe na . Admin only for the owner not for user . 
 5. Sign up process thik korte hobe
+
+At admin panel category page we have list of all category pages but please make it as a sidebar sub-menu items and in the sidebar please show them correctly!!!!
