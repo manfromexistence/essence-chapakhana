@@ -77,7 +77,11 @@
 
     <div class="border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-gray-400">
-            <span>{{ $footerContent['copyright'] ?? '© ' . date('Y') . ' chapakhana. All rights reserved.' }}</span>
+            <div class="flex flex-col md:flex-row items-center gap-2 md:gap-3">
+                <span>{{ $footerContent['copyright'] ?? '© ' . date('Y') . ' chapakhana. All rights reserved.' }}</span>
+                <span class="hidden md:inline">|</span>
+                <span class="text-gray-500">Developed By <a href="https://alphainno.com" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 font-medium">Alphainno</a></span>
+            </div>
             <div class="flex items-center gap-4">
                 <a href="/privacy" class="hover:text-white">Privacy</a>
                 <a href="/terms" class="hover:text-white">Terms</a>

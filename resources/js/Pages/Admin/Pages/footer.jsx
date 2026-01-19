@@ -145,7 +145,7 @@ export default function FooterEditor({ section }) {
                                         ...data.content,
                                         company_info: { ...data.content.company_info, name: e.target.value }
                                     })}
-                                    defaultValue={initialContent.company_info?.name}
+                                    defaultValue={section?.content?.company_info?.name}
                                     maxLength={50}
                                     placeholder="Chapakhana"
                                 />
@@ -180,7 +180,7 @@ export default function FooterEditor({ section }) {
                                             ...data.content,
                                             contact: { ...data.content.contact, address: e.target.value }
                                         })}
-                                        defaultValue={initialContent.contact?.address}
+                                        defaultValue={section?.content?.contact?.address}
                                         maxLength={100}
                                         placeholder="ঢাকা, বাংলাদেশ"
                                     />
@@ -192,7 +192,7 @@ export default function FooterEditor({ section }) {
                                             ...data.content,
                                             contact: { ...data.content.contact, phone: e.target.value }
                                         })}
-                                        defaultValue={initialContent.contact?.phone}
+                                        defaultValue={section?.content?.contact?.phone}
                                         maxLength={20}
                                         placeholder="+880 1XXX-XXXXXX"
                                     />
@@ -205,7 +205,7 @@ export default function FooterEditor({ section }) {
                                             ...data.content,
                                             contact: { ...data.content.contact, email: e.target.value }
                                         })}
-                                        defaultValue={initialContent.contact?.email}
+                                        defaultValue={section?.content?.contact?.email}
                                         placeholder="info@chapakhana.com"
                                     />
                                 </div>
@@ -346,7 +346,7 @@ export default function FooterEditor({ section }) {
                                         ...data.content,
                                         copyright: e.target.value
                                     })}
-                                    defaultValue={initialContent.copyright}
+                                    defaultValue={section?.content?.copyright}
                                     maxLength={100}
                                     placeholder="© 2026 Chapakhana. All rights reserved."
                                 />

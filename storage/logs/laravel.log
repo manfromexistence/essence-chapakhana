@@ -6421,3 +6421,27 @@
 [2026-01-13 08:46:26] testing.INFO: Product deleted {"product_id":1,"title":"Quia Aut Qui","user_id":null} 
 [2026-01-13 08:46:26] testing.ERROR: Product not found with ID: 999 {"product_id":999,"exception":"App\\Exceptions\\ProductException","file":"F:\\Code\\chapakhana\\app\\Exceptions\\ProductException.php","line":25,"status_code":404,"request":{"url":"http://localhost:8000","method":"GET","ip":"127.0.0.1","user_agent":"Symfony"}} 
 [2026-01-13 08:46:26] testing.INFO: Product stock updated {"product_id":1,"in_stock":false} 
+[2026-01-19 08:50:20] local.ERROR: PHP Parse error: Syntax error, unexpected '=' on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected '=' on line 1 at F:/Code/chapakhana/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 F:/Code/chapakhana/vendor/psy/psysh/src/CodeCleaner.php(488): Psy/Exception/ParseErrorException::fromParseError(Object(PhpParser/Error))
+#1 F:/Code/chapakhana/vendor/psy/psysh/src/CodeCleaner.php(269): Psy/CodeCleaner->parse('<?php  = App//Mo...', false)
+#2 F:/Code/chapakhana/vendor/psy/psysh/src/Shell.php(985): Psy/CodeCleaner->clean(Array, false)
+#3 F:/Code/chapakhana/vendor/psy/psysh/src/Shell.php(1018): Psy/Shell->addCode(' = App//Models//S...', true)
+#4 F:/Code/chapakhana/vendor/psy/psysh/src/Shell.php(1562): Psy/Shell->setCode(' = App//Models//S...', true)
+#5 F:/Code/chapakhana/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy/Shell->execute(' = App//Models//S...')
+#6 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel/Tinker/Console/TinkerCommand->handle()
+#7 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::{closure:Illuminate/Container/BoundMethod::call():35}()
+#8 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#9 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#10 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#11 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#12 F:/Code/chapakhana/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#13 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#14 F:/Code/chapakhana/vendor/symfony/console/Application.php(1102): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#15 F:/Code/chapakhana/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Laravel/Tinker/Console/TinkerCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#16 F:/Code/chapakhana/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#17 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#18 F:/Code/chapakhana/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#19 F:/Code/chapakhana/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#20 {main}
+"} 

@@ -20,12 +20,15 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 require __DIR__.'/auth.php';
 require __DIR__.'/shop.php';
 
+// Redirect /admin based on authentication
+Route::get('/admin', function () {
+    if (auth()->check() && auth()->user()->is_admin) {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('admin.login');
+});
+
 // Admin routes with prefix
 Route::prefix('admin')->name('admin.')->group(function () {
     require __DIR__.'/admin.php';
-});
-
-// Redirect /admin to admin login
-Route::get('/admin', function () {
-    return redirect()->route('admin.login');
 });
