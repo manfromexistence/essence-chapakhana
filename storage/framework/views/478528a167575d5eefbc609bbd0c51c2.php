@@ -152,13 +152,92 @@
                     </div>
                 </div>
 
-                <div class="space-y-2">
+                <div class="space-y-3">
                     <div class="flex items-center justify-between text-xs font-semibold text-gray-700">
                         <span>Max price</span>
-                        <span id="priceValue" class="text-blue-600">$15000</span>
+                        <span id="priceValue" class="text-blue-600">৳14995</span>
                     </div>
-                    <input id="priceRange" type="range" min="5" max="15000" step="10" value="15000"
-                        class="w-full accent-blue-600">
+                    <div class="py-2">
+                        <input id="priceRange" type="range" min="5" max="14995" step="10" value="14995"
+                            class="w-full range-slider">
+                    </div>
+                    <style>
+                        .range-slider {
+                            -webkit-appearance: none;
+                            appearance: none;
+                            width: 100%;
+                            height: 6px;
+                            border-radius: 3px;
+                            background: linear-gradient(to right, #2563eb 0%, #2563eb 100%, #e5e7eb 100%, #e5e7eb 100%);
+                            outline: none;
+                            cursor: pointer;
+                            position: relative;
+                        }
+                        
+                        .range-slider::-webkit-slider-thumb {
+                            -webkit-appearance: none;
+                            appearance: none;
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                            background: #2563eb;
+                            cursor: pointer;
+                            border: 3px solid white;
+                            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+                            transition: all 0.15s ease;
+                            position: relative;
+                            margin-top: -7px;
+                        }
+                        
+                        .range-slider::-webkit-slider-thumb:hover {
+                            transform: scale(1.15);
+                            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.5);
+                        }
+                        
+                        .range-slider::-webkit-slider-thumb:active {
+                            transform: scale(1.05);
+                        }
+                        
+                        .range-slider::-moz-range-thumb {
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                            background: #2563eb;
+                            cursor: pointer;
+                            border: 3px solid white;
+                            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+                            transition: all 0.15s ease;
+                        }
+                        
+                        .range-slider::-moz-range-thumb:hover {
+                            transform: scale(1.15);
+                            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.5);
+                        }
+                        
+                        .range-slider::-moz-range-thumb:active {
+                            transform: scale(1.05);
+                        }
+                        
+                        .range-slider::-webkit-slider-runnable-track {
+                            width: 100%;
+                            height: 6px;
+                            background: transparent;
+                            border-radius: 3px;
+                        }
+                        
+                        .range-slider::-moz-range-track {
+                            width: 100%;
+                            height: 6px;
+                            background: #e5e7eb;
+                            border-radius: 3px;
+                        }
+                        
+                        .range-slider::-moz-range-progress {
+                            height: 6px;
+                            background: #2563eb;
+                            border-radius: 3px 0 0 3px;
+                        }
+                    </style>
                 </div>
 
                 <div class="space-y-2">
@@ -303,7 +382,11 @@
             let selectedFormat = '';
 
             const updatePriceOutput = () => {
-                priceValue.textContent = `৳${priceRange.value}`;
+                const value = priceRange.value;
+                const max = priceRange.max;
+                const percentage = (value / max) * 100;
+                priceValue.textContent = `৳${value}`;
+                priceRange.style.setProperty('--value', `${percentage}%`);
             };
 
             const sortCards = () => {
@@ -374,7 +457,7 @@
                 searchInput.value = '';
                 categoryChecks.forEach(c => { c.checked = false; });
                 ratingRadios.forEach(r => { r.checked = r.value === '0'; });
-                priceRange.value = 15000;
+                priceRange.value = 14995;
                 selectedFormat = '';
                 stockToggle.checked = true;
                 formatButtons.forEach(btn => btn.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-700'));
