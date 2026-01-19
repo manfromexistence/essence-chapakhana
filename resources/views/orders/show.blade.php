@@ -78,8 +78,8 @@
                     <div class="space-y-4">
                         @foreach($order->items as $item)
                             <div class="flex items-start gap-4 pb-4 border-b border-gray-200 last:border-0 last:pb-0">
-                                @if($item->product && $item->product->image)
-                                    <img src="{{ $item->product->image }}" alt="{{ $item->product_name }}" class="w-20 h-20 object-cover rounded-lg">
+                                @if($item->product_image)
+                                    <img src="{{ asset($item->product_image) }}" alt="{{ $item->product_title }}" class="w-20 h-20 object-cover rounded-lg">
                                 @else
                                     <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
                                         <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,8 +88,11 @@
                                     </div>
                                 @endif
                                 <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900">{{ $item->product_name }}</h3>
+                                    <h3 class="font-medium text-gray-900">{{ $item->product_title }}</h3>
                                     <p class="text-sm text-gray-600 mt-1">Quantity: {{ $item->quantity }}</p>
+                                    @if($item->format)
+                                        <p class="text-sm text-gray-500">Format: {{ $item->format }}</p>
+                                    @endif
                                     <p class="text-sm text-gray-600">Unit Price: ৳{{ number_format($item->price / $item->quantity, 2) }}</p>
                                 </div>
                                 <div class="text-right">
@@ -109,49 +112,90 @@
                     <div class="space-y-3">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-medium text-gray-900">৳{{ number_format($order->total_amount, 2) }}</span>
+                            <span class="font-medium text-gray-900">৳{{ number_format($order->subtotal ?? $order->total, 2) }}</span>
                         </div>
+                        @if($order->tax)
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Tax</span>
+                            <span class="font-medium text-gray-900">৳{{ number_format($order->tax, 2) }}</span>
+                        </div>
+                        @endif
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Shipping</span>
-                            <span class="font-medium text-gray-900">৳0.00</span>
+                            <span class="font-medium text-green-600">Free</span>
                         </div>
                         <div class="border-t border-gray-200 pt-3 flex justify-between">
                             <span class="font-semibold text-gray-900">Total</span>
-                            <span class="font-bold text-xl text-gray-900">৳{{ number_format($order->total_amount, 2) }}</span>
+                            <span class="font-bold text-xl text-gray-900">৳{{ number_format($order->total, 2) }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Customer Information -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Customer Information</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Shipping Information</h2>
                     <div class="space-y-3 text-sm">
-                        @if($order->customer_name)
+                        @if($order->shipping_name)
                             <div>
                                 <p class="text-gray-600">Name</p>
-                                <p class="font-medium text-gray-900">{{ $order->customer_name }}</p>
+                                <p class="font-medium text-gray-900">{{ $order->shipping_name }}</p>
                             </div>
                         @endif
-                        @if($order->customer_email)
+                        @if($order->shipping_email)
                             <div>
                                 <p class="text-gray-600">Email</p>
-                                <p class="font-medium text-gray-900">{{ $order->customer_email }}</p>
+                                <p class="font-medium text-gray-900">{{ $order->shipping_email }}</p>
                             </div>
                         @endif
-                        @if($order->customer_phone)
+                        @if($order->shipping_phone)
                             <div>
                                 <p class="text-gray-600">Phone</p>
-                                <p class="font-medium text-gray-900">{{ $order->customer_phone }}</p>
+                                <p class="font-medium text-gray-900">{{ $order->shipping_phone }}</p>
                             </div>
                         @endif
-                        @if($order->customer_address)
+                        @if($order->shipping_address)
                             <div>
                                 <p class="text-gray-600">Address</p>
-                                <p class="font-medium text-gray-900">{{ $order->customer_address }}</p>
+                                <p class="font-medium text-gray-900">{{ $order->shipping_address }}</p>
+                                @if($order->shipping_city)
+                                    <p class="font-medium text-gray-900">{{ $order->shipping_city }}@if($order->shipping_zip), {{ $order->shipping_zip }}@endif</p>
+                                @endif
+                            </div>
+                        @endif
+                        @if($order->payment_method)
+                            <div>
+                                <p class="text-gray-600">Payment Method</p>
+                                <p class="font-medium text-gray-900">{{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}</p>
                             </div>
                         @endif
                     </div>
                 </div>
+
+                @if($order->has_design_request)
+                <!-- Design Request -->
+                <div class="bg-purple-50 rounded-lg border border-purple-200 p-6">
+                    <h3 class="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                        </svg>
+                        Design Request
+                    </h3>
+                    <p class="text-sm text-purple-800 mb-2">You requested design assistance for this order.</p>
+                    @if($order->design_request_notes)
+                        <div class="bg-white rounded p-3 text-sm text-gray-700 mb-2">
+                            {{ $order->design_request_notes }}
+                        </div>
+                    @endif
+                    @if($order->design_file_path)
+                        <a href="{{ asset('storage/' . $order->design_file_path) }}" target="_blank" class="inline-flex items-center gap-2 text-sm text-purple-700 hover:text-purple-900">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                            </svg>
+                            View Uploaded File
+                        </a>
+                    @endif
+                </div>
+                @endif
 
                 <!-- Need Help -->
                 <div class="bg-blue-50 rounded-lg border border-blue-200 p-6">

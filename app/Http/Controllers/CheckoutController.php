@@ -58,6 +58,9 @@ class CheckoutController extends Controller
             'shipping_address' => 'required|string|max:500',
             'shipping_city' => 'required|string|max:100',
             'shipping_zip' => 'required|string|max:20',
+            'has_design_request' => 'nullable|boolean',
+            'design_request_notes' => 'nullable|string|max:2000',
+            'design_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,ai,psd|max:10240',
         ];
 
         // Build dynamic validation for additional fields
@@ -112,6 +115,12 @@ class CheckoutController extends Controller
         // For now, we'll just simulate success
         $orderNumber = 'ORD-'.strtoupper(uniqid());
 
+        // Handle design file upload
+        $designFilePath = null;
+        if ($request->hasFile('design_file')) {
+            $designFilePath = $request->file('design_file')->store('design-requests', 'public');
+        }
+
         // Save order to database
         $order = \App\Models\Order::create([
             'user_id' => auth()->id(),
@@ -126,6 +135,9 @@ class CheckoutController extends Controller
             'shipping_zip' => $validated['shipping_zip'] ?? null,
             'payment_method' => $validated['payment_method'] ?? 'cash_on_delivery',
             'notes' => $validated['notes'] ?? null,
+            'has_design_request' => $request->boolean('has_design_request'),
+            'design_request_notes' => $validated['design_request_notes'] ?? null,
+            'design_file_path' => $designFilePath,
             'subtotal' => $subtotal,
             'tax' => $taxAmount,
             'total' => $total,

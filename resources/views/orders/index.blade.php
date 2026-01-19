@@ -63,8 +63,8 @@
                                 <div class="space-y-3">
                                     @foreach($order->items as $item)
                                         <div class="flex items-center gap-4">
-                                            @if($item->product && $item->product->image)
-                                                <img src="{{ $item->product->image }}" alt="{{ $item->product_name }}" class="w-16 h-16 object-cover rounded-lg">
+                                            @if($item->product_image)
+                                                <img src="{{ asset($item->product_image) }}" alt="{{ $item->product_title }}" class="w-16 h-16 object-cover rounded-lg">
                                             @else
                                                 <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
                                                     <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,8 +73,11 @@
                                                 </div>
                                             @endif
                                             <div class="flex-1">
-                                                <h4 class="font-medium text-gray-900">{{ $item->product_name }}</h4>
+                                                <h4 class="font-medium text-gray-900">{{ $item->product_title }}</h4>
                                                 <p class="text-sm text-gray-600">Quantity: {{ $item->quantity }}</p>
+                                                @if($item->format)
+                                                    <p class="text-sm text-gray-500">Format: {{ $item->format }}</p>
+                                                @endif
                                             </div>
                                             <div class="text-right">
                                                 <p class="font-semibold text-gray-900">৳{{ number_format($item->price, 2) }}</p>
@@ -93,7 +96,7 @@
                                 <div class="flex items-center gap-4">
                                     <div class="text-right">
                                         <p class="text-sm text-gray-600">Total Amount</p>
-                                        <p class="text-xl font-bold text-gray-900">৳{{ number_format($order->total_amount, 2) }}</p>
+                                        <p class="text-xl font-bold text-gray-900">৳{{ number_format($order->total, 2) }}</p>
                                     </div>
                                     <a href="{{ route('orders.show', $order) }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium">
                                         View Details

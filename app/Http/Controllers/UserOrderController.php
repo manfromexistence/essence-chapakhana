@@ -13,9 +13,14 @@ class UserOrderController extends Controller
      */
     public function index()
     {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please login to view your orders.');
+        }
+
         $orders = Auth::user()
             ->orders()
-            ->with(['items.product'])
+            ->with(['items'])
             ->latest()
             ->paginate(10);
 
@@ -27,12 +32,17 @@ class UserOrderController extends Controller
      */
     public function show(Order $order)
     {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please login to view your orders.');
+        }
+
         // Ensure user can only view their own orders
         if ($order->user_id !== Auth::id()) {
             abort(403, 'Unauthorized access to this order.');
         }
 
-        $order->load(['items.product']);
+        $order->load(['items']);
 
         return view('orders.show', compact('order'));
     }

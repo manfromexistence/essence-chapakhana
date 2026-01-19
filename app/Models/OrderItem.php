@@ -20,13 +20,6 @@ class OrderItem extends Model
     ];
 
     /**
-     * Eager load product relationship by default.
-     *
-     * @var array
-     */
-    protected $with = ['product'];
-
-    /**
      * Cast attributes to native types.
      *
      * @var array

@@ -23,12 +23,11 @@
         <div>
             <h4 class="text-sm font-semibold text-white uppercase tracking-wide">Shop</h4>
             <ul class="mt-4 space-y-2 text-sm">
-                <li><a href="/books" class="hover:text-white">Magazines, Books & Catalogs</a></li>
-                <li><a href="/brochures" class="hover:text-white">Marketing Materials</a></li>
-                <li><a href="/business-cards" class="hover:text-white">Business Cards</a></li>
-                <li><a href="/postcards-invitations" class="hover:text-white">Invitations & Stationery</a></li>
-                <li><a href="/stickers" class="hover:text-white">Stickers & Labels</a></li>
-                <li><a href="/banners" class="hover:text-white">Signs & Banners</a></li>
+                <li><a href="/books" class="hover:text-white">Books</a></li>
+                <li><a href="/marketing" class="hover:text-white">Marketing Materials</a></li>
+                <li><a href="/stationery" class="hover:text-white">Stationery</a></li>
+                <li><a href="/signage" class="hover:text-white">Signage & Posters</a></li>
+                <li><a href="/packaging" class="hover:text-white">Packaging</a></li>
             </ul>
         </div>
 

@@ -181,6 +181,40 @@
                     @endforeach
                     @endif
 
+                    <!-- Design Request Section -->
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold text-gray-900">Design Request</h2>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" name="has_design_request" id="hasDesignRequest" value="1" {{ old('has_design_request') ? 'checked' : '' }} class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="ml-2 text-sm font-medium text-gray-700">I need design assistance</span>
+                            </label>
+                        </div>
+
+                        <div id="designRequestFields" class="space-y-4" style="display: {{ old('has_design_request') ? 'block' : 'none' }};">
+                            <div>
+                                <label for="design_request_notes" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Design Requirements
+                                </label>
+                                <textarea id="design_request_notes" name="design_request_notes" rows="4" placeholder="Please describe your design requirements, preferences, colors, style, etc." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('design_request_notes') }}</textarea>
+                                @error('design_request_notes')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="design_file" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Upload Reference Files (Optional)
+                                </label>
+                                <input type="file" id="design_file" name="design_file" accept="image/*,.pdf,.ai,.psd" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <p class="mt-1 text-xs text-gray-500">Accepted formats: Images, PDF, AI, PSD (Max 10MB)</p>
+                                @error('design_file')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="flex gap-4">
                         <a href="{{ route('cart.index') }}" class="flex-1 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition text-center">
@@ -244,3 +278,18 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const designCheckbox = document.getElementById('hasDesignRequest');
+    const designFields = document.getElementById('designRequestFields');
+    
+    if (designCheckbox && designFields) {
+        designCheckbox.addEventListener('change', function() {
+            designFields.style.display = this.checked ? 'block' : 'none';
+        });
+    }
+});
+</script>
+@endpush
