@@ -81,6 +81,17 @@ export default function Settings({ settings }) {
                     </div>
                 )}
 
+                {/* Error Message */}
+                {flash?.error && (
+                    <div className="px-4 lg:px-6">
+                        <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
+                            <p className="text-sm font-medium text-red-800 dark:text-red-400">
+                                {flash.error}
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 {/* Content */}
                 <form onSubmit={handleSubmit} className="px-4 lg:px-6 space-y-6">
                     {/* Site Name */}
