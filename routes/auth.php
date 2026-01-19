@@ -28,4 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/profile/image', [App\Http\Controllers\ProfileController::class, 'removeImage'])->name('profile.image.remove');
+
+    // User Orders (separate from admin)
+    Route::get('/orders', [App\Http\Controllers\UserOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [App\Http\Controllers\UserOrderController::class, 'show'])->name('orders.show');
 });

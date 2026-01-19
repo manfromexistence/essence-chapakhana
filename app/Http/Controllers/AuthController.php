@@ -44,17 +44,28 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::min(8)],
+            'terms' => ['accepted'],
+        ], [
+            'name.required' => 'Please enter your full name.',
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email is already registered. Please login instead.',
+            'password.required' => 'Please enter a password.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.confirmed' => 'Password confirmation does not match.',
+            'terms.accepted' => 'You must agree to the terms and conditions.',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_admin' => false, // Explicitly set non-admin
         ]);
 
         Auth::login($user);
 
-        return redirect('/')->with('success', 'Welcome to chapakhana!');
+        return redirect('/')->with('success', 'Welcome to Chapakhana! Your account has been created successfully.');
     }
 
     public function logout(Request $request)

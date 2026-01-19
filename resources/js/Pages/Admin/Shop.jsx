@@ -174,7 +174,7 @@ export default function Shop({ hero = {}, categories = [], products = [], orders
                                         label="Cover Background Image"
                                         id="cover_image"
                                         value={data.cover_image}
-                                        currentImage={hero.cover_image}
+                                        defaultImage={hero.cover_image}
                                         onChange={(file) => setData('cover_image', file)}
                                         helperText="Upload a background image for the hero section (recommended: 1920x1080px or larger)"
                                         accept="image/*"

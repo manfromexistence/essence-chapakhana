@@ -36,6 +36,7 @@ export const AdminImageInput = ({
     value,
     onChange,
     defaultImage = '',
+    currentImage = '', // Support both props for compatibility
     uploadFolder = 'images',
     required = false,
     error,
@@ -46,15 +47,17 @@ export const AdminImageInput = ({
     aspectRatio = '16/9',
     showPreview = true,
     disabled = false,
-    currentImage, // Destructure to prevent passing to DOM
     ...props
 }) => {
     // Ensure we only work with string values
     const getStringValue = (val) => (typeof val === 'string' ? val : '');
     
-    const [previewUrl, setPreviewUrl] = useState(getStringValue(value) || getStringValue(defaultImage));
-    const [imageSource, setImageSource] = useState(getStringValue(value) ? 'url' : (getStringValue(defaultImage) ? 'default' : null));
-    const [urlInput, setUrlInput] = useState(getStringValue(value) || getStringValue(defaultImage) || '');
+    // Use currentImage if provided, otherwise use defaultImage
+    const initialImage = getStringValue(currentImage) || getStringValue(defaultImage);
+    
+    const [previewUrl, setPreviewUrl] = useState(getStringValue(value) || initialImage);
+    const [imageSource, setImageSource] = useState(getStringValue(value) ? 'url' : (initialImage ? 'default' : null));
+    const [urlInput, setUrlInput] = useState(getStringValue(value) || initialImage || '');
     const [validationError, setValidationError] = useState('');
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -63,22 +66,22 @@ export const AdminImageInput = ({
     useEffect(() => {
         // Update preview when value changes externally
         const strValue = getStringValue(value);
-        const strDefault = getStringValue(defaultImage);
+        const strInitial = initialImage;
         
         if (strValue) {
             setPreviewUrl(strValue);
             setImageSource('url');
             setUrlInput(strValue);
-        } else if (strDefault) {
-            setPreviewUrl(strDefault);
+        } else if (strInitial) {
+            setPreviewUrl(strInitial);
             setImageSource('default');
-            setUrlInput(strDefault);
+            setUrlInput(strInitial);
         } else {
             setPreviewUrl('');
             setImageSource(null);
             setUrlInput('');
         }
-    }, [value, defaultImage]);
+    }, [value, currentImage, defaultImage]);
 
     const validateFile = (file) => {
         // Check file type
@@ -236,15 +239,16 @@ export const AdminImageInput = ({
     };
 
     const handleRemove = () => {
-        setPreviewUrl(defaultImage || '');
-        setImageSource(defaultImage ? 'default' : null);
-        setUrlInput(defaultImage || '');
+        const fallbackImage = initialImage;
+        setPreviewUrl(fallbackImage || '');
+        setImageSource(fallbackImage ? 'default' : null);
+        setUrlInput(fallbackImage || '');
         setValidationError('');
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
         if (onChange) {
-            onChange(defaultImage || '');
+            onChange(fallbackImage || '');
         }
     };
 

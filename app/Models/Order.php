@@ -53,6 +53,9 @@ class Order extends Model
         'shipping_zip',
         'payment_method',
         'notes',
+        'has_design_request',
+        'design_request_notes',
+        'design_file_path',
         'subtotal',
         'tax',
         'total',
@@ -75,6 +78,7 @@ class Order extends Model
         'subtotal' => 'decimal:2',
         'tax' => 'decimal:2',
         'total' => 'decimal:2',
+        'has_design_request' => 'boolean',
     ];
 
     public function user()
