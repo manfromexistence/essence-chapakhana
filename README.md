@@ -21,3 +21,11 @@ rm -f bootstrap/cache/*.php
 
 php artisan key:generate && php artisan migrate:fresh --seed && rm -rf public/storage && php artisan storage:link
 ```
+
+
+Chapakhana task
+1. Pricing chart miss 
+2. Order issues 
+3. Design request not included 
+4. Admin dashboard easy korte hobe . R admin panel r my order eksathe asbe na . Admin only for the owner not for user . 
+5. Sign up process thik korte hobe
