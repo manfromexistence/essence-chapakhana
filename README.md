@@ -2,20 +2,6 @@
 
 Chapakhana is a product of Nex Group and Developed by Alphainno.
 
-## Recent Updates (January 19, 2026)
-
-### ✅ Completed Tasks
-
-1. **Design Request Integration** - Added design request fields to checkout process
-   - Checkbox to enable design assistance
-   - Text area for design requirements
-   - File upload for reference materials (images, PDF, AI, PSD)
-   - Stored in orders table with migration
-
-2. **Order System Improvements**
-   - Design request fields added to Order model
-   - File upload h
-
 ```bash
 npm run build && "/c/Program Files/7-Zip/7z.exe" a -tzip ../chapakhana.zip . '-xr!node_modules' '-xr!.git' -mx=1
 ```
