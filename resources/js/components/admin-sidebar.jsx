@@ -73,6 +73,19 @@ const navMain = [
         title: "Category Pages",
         url: "/admin/pages",
         icon: FileIcon,
+        items: [
+            { title: "Magazines", url: "/admin/pages/category/magazines" },
+            { title: "Books", url: "/admin/pages/category/books" },
+            { title: "Catalogs", url: "/admin/pages/category/catalogs" },
+            { title: "Marketing Material", url: "/admin/pages/category/brochures" },
+            { title: "Business Cards", url: "/admin/pages/category/business-cards" },
+            { title: "Invitation & Stationery", url: "/admin/pages/category/postcards-invitations" },
+            { title: "Banners", url: "/admin/pages/category/banners" },
+            { title: "Promotional Items", url: "/admin/pages/category/promotional-items" },
+            { title: "Stickers", url: "/admin/pages/category/stickers" },
+            { title: "Booklets", url: "/admin/pages/category/booklets" },
+            { title: "Stationery", url: "/admin/pages/category/stationery" },
+        ],
     },
 ]
 
@@ -101,6 +114,7 @@ const navSecondary = [
 
 export function AdminSidebar({ ...props }) {
     const { auth, site } = usePage().props
+    const sidebarContentRef = React.useRef(null)
 
     const user = {
         name: auth?.user?.name || "Admin",
@@ -126,6 +140,31 @@ export function AdminSidebar({ ...props }) {
         }
     }, [site?.logo]);
 
+    // Restore scroll position on mount
+    React.useEffect(() => {
+        if (sidebarContentRef.current && typeof window !== 'undefined') {
+            const savedScrollPos = localStorage.getItem('admin_sidebar_scroll')
+            if (savedScrollPos) {
+                sidebarContentRef.current.scrollTop = parseInt(savedScrollPos, 10)
+            }
+        }
+    }, [])
+
+    // Save scroll position on scroll
+    React.useEffect(() => {
+        const handleScroll = () => {
+            if (sidebarContentRef.current && typeof window !== 'undefined') {
+                localStorage.setItem('admin_sidebar_scroll', sidebarContentRef.current.scrollTop.toString())
+            }
+        }
+
+        const contentElement = sidebarContentRef.current
+        if (contentElement) {
+            contentElement.addEventListener('scroll', handleScroll)
+            return () => contentElement.removeEventListener('scroll', handleScroll)
+        }
+    }, [])
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
@@ -148,7 +187,7 @@ export function AdminSidebar({ ...props }) {
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
-            <SidebarContent>
+            <SidebarContent ref={sidebarContentRef}>
                 <AdminNavMain items={navMain} />
                 <AdminNavSecondary items={navSecondary} className="mt-auto" />
             </SidebarContent>
