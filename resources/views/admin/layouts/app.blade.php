@@ -6,6 +6,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Dashboard') Chapakhana</title>
     
+    {{-- Favicon --}}
+    @php
+        $favicon = \App\Models\SiteSetting::get('favicon', '/favicon.ico');
+    @endphp
+    <link rel="icon" href="{{ $favicon }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ $favicon }}" type="image/x-icon">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <style>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useForm, usePage } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -17,14 +17,25 @@ export default function Settings({ settings }) {
 
     const [faviconPreview, setFaviconPreview] = useState(settings?.favicon || '/favicon.ico');
 
+    // Update form when settings change (after successful save)
+    useEffect(() => {
+        if (settings) {
+            setData({
+                site_name: settings.site_name || 'Chapakhana',
+                favicon: null,
+            });
+            setFaviconPreview(settings.favicon || '/favicon.ico');
+        }
+    }, [settings?.site_name, settings?.favicon]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         post('/admin/settings', {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
-                // Reload to show updated favicon
-                window.location.reload();
+                // Don't reload, just show success message
+                // The form will keep the updated values
             },
         });
     };

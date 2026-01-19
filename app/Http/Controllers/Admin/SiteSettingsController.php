@@ -64,6 +64,15 @@ class SiteSettingsController extends Controller
         // Clear cache to reflect changes immediately
         SiteSetting::clearCache();
 
-        return back()->with('success', 'Site settings updated successfully!');
+        // Return fresh settings
+        $settings = [
+            'site_name' => SiteSetting::get('site_name', 'Chapakhana'),
+            'favicon' => SiteSetting::get('favicon', '/favicon.ico'),
+        ];
+
+        return back()->with([
+            'success' => 'Site settings updated successfully!',
+            'settings' => $settings,
+        ]);
     }
 }

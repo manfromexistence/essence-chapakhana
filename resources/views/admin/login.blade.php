@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Chapakhana</title>
+    
+    {{-- Favicon --}}
+    @php
+        $favicon = \App\Models\SiteSetting::get('favicon', '/favicon.ico');
+    @endphp
+    <link rel="icon" href="{{ $favicon }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ $favicon }}" type="image/x-icon">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom gradient background */
