@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { AdminTextInput } from '@/components/AdminTextInput';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
@@ -18,16 +19,14 @@ export default function Login() {
     };
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4">
-            {/* Animated gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700">
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00em0wIDI0YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00ek0xMiAxNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMCAyNGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
-            </div>
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4 bg-muted/30">
+            {/* Subtle pattern background using design tokens */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0iTTM2IDE2YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00em0wIDI0YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00ek0xMiAxNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMCAyNGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')]"></div>
 
-            {/* Floating shapes for visual interest */}
+            {/* Floating shapes using design tokens */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <motion.div
-                    className="absolute top-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"
+                    className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl"
                     animate={{
                         x: [0, 100, 0],
                         y: [0, 50, 0],
@@ -39,7 +38,7 @@ export default function Login() {
                     }}
                 />
                 <motion.div
-                    className="absolute bottom-20 right-10 w-96 h-96 bg-purple-300/10 rounded-full blur-3xl"
+                    className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
                     animate={{
                         x: [0, -100, 0],
                         y: [0, -50, 0],
@@ -65,19 +64,19 @@ export default function Login() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="mb-8 text-center"
                 >
-                    <div className="inline-block p-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl">
+                    <Card className="inline-block p-6 shadow-lg border-2">
                         <img 
                             src="/logo.png" 
                             alt="Chapakhana Logo" 
                             className="h-20 w-auto mx-auto"
                         />
-                    </div>
+                    </Card>
                 </motion.div>
 
-                {/* Glassmorphism card */}
-                <Card className="border-0 bg-white/95 backdrop-blur-xl shadow-2xl">
+                {/* Main login card */}
+                <Card className="shadow-xl border-2">
                     <CardHeader className="space-y-2 pb-6">
-                        <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                        <CardTitle className="text-3xl font-bold text-center">
                             Admin Portal
                         </CardTitle>
                         <CardDescription className="text-center text-base">
@@ -129,14 +128,15 @@ export default function Login() {
                                 transition={{ duration: 0.4, delay: 0.5 }}
                                 className="flex items-center space-x-2"
                             >
-                                <input
+                                <Checkbox
                                     id="remember"
-                                    type="checkbox"
                                     checked={data.remember}
-                                    onChange={(e) => setData('remember', e.target.checked)}
-                                    className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 focus:ring-offset-0 transition-colors cursor-pointer"
+                                    onCheckedChange={(checked) => setData('remember', checked)}
                                 />
-                                <Label htmlFor="remember" className="text-sm font-normal cursor-pointer select-none">
+                                <Label 
+                                    htmlFor="remember" 
+                                    className="text-sm font-normal cursor-pointer select-none leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
                                     Remember me for 30 days
                                 </Label>
                             </motion.div>
@@ -148,8 +148,9 @@ export default function Login() {
                             >
                                 <Button 
                                     type="submit" 
-                                    className="w-full h-11 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]" 
+                                    className="w-full h-11 font-semibold shadow-md hover:shadow-lg transition-all duration-200" 
                                     disabled={processing}
+                                    size="lg"
                                 >
                                     {processing ? (
                                         <span className="flex items-center justify-center gap-2">
@@ -173,7 +174,7 @@ export default function Login() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
-                    className="mt-6 text-center text-sm text-white/90"
+                    className="mt-6 text-center text-sm text-muted-foreground"
                 >
                     © {new Date().getFullYear()} Chapakhana. All rights reserved.
                 </motion.p>

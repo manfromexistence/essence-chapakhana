@@ -170,7 +170,7 @@ export default function Shop({ hero = {}, categories = [], products = [], orders
                                         maxLength={300}
                                     />
 
-                                    <AdminImageInput
+                                    {/* <AdminImageInput
                                         label="Cover Background Image"
                                         id="cover_image"
                                         value={data.cover_image}
@@ -178,7 +178,7 @@ export default function Shop({ hero = {}, categories = [], products = [], orders
                                         onChange={(file) => setData('cover_image', file)}
                                         helperText="Upload a background image for the hero section (recommended: 1920x1080px or larger)"
                                         accept="image/*"
-                                    />
+                                    /> */}
 
                                     {/* Badges */}
                                     <div className="space-y-3">
