@@ -8,7 +8,7 @@ storage/logs
 .env.example
 bun.lock
 package-lock.json
-composer.lock
+# composer.lock is needed for deterministic installs
 lms.pdf
 README.md
 .phpunit.*
