@@ -22,7 +22,9 @@ RUN apt-get update && apt-get install -y \
 COPY --from=build /app /var/www/html
 COPY --from=build /usr/bin/composer /usr/bin/composer
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
+RUN mkdir -p /var/www/html/storage/framework/{cache,views,sessions,testing} \
+    && mkdir -p /var/www/html/storage/logs \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
     && touch /var/www/html/database/database.sqlite \
     && chown www-data:www-data /var/www/html/database/database.sqlite
 
